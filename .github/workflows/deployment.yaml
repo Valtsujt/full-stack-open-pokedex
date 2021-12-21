@@ -40,7 +40,20 @@ jobs:
           healthcheck: "https://fullstack-deployment-test.herokuapp.com/health"
           checkstring: "ok"
           rollbackonhealthcheckfailed: true
-      
+      - uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took,pullRequest # selectable (default: repo,message)
+          custom_payload: |
+            {
+              attachments: [{
+                color: '${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning',
+                text: `a new version deployed to https://fullstack-deployment-test.herokuapp.com/ (${process.env.AS_COMMIT})  by ${process.env.AS_AUTHOR} Build took ${process.env.AS_TOOK}`,
+              }]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
+        if: always() # Pick up events even if the job fails or is canceled.
       
   tag:
     runs-on: ubuntu-18.04
