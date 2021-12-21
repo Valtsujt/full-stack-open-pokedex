@@ -1,0 +1,6 @@
+I picked Python as my choice for the hypothetical language. 
+It seems there are many different linters for python out there: Pylint ,Flake8, Pyright mypy and pyflakes to name a few. I have heard from Pylint before so that would be the one, I would choose. 
+For testing there seems to be unittest which is build into python standard library and many more. 
+For building there are at least PyBuilder 
+Instead of using Jenkins or GitHub actions my team could use AWS codePipleine if we were using amazon as our could. If we were not using GitHub as our platform, we could use GitLab which comes with its our tools for Continuous integration.  Spinnaker is also a option although it is in the continuous delivery side of things and we would need to have some other thing taking care of CI.
+Whether I would use self-hosted or cloud-based environment would probably not be in my hands and instead be chosen by the needs of the company I am working this project for. Whether they have servers and enough them is a question. If they do not have own servers, they would need to buy them or choose to use cloud hosting.  I do not think that it matters to me so much whether the application is self-hosted or not. As long as we are not using one of the tools that require certain clouds such as AWS codePipeline
