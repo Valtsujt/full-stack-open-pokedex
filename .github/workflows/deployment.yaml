@@ -41,6 +41,7 @@ jobs:
           checkstring: "ok"
           rollbackonhealthcheckfailed: true
       - uses: 8398a7/action-slack@v3
+        if: always() && ${{ github.event_name == 'push' && !contains(join(toJson(github.event.commits.*.message), ', '), '#skip') }}
         with:
           status: custom
           fields: repo,message,commit,author,action,eventName,ref,workflow,job,took,pullRequest # selectable (default: repo,message)
@@ -53,7 +54,6 @@ jobs:
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
-        if: always() # Pick up events even if the job fails or is canceled.
       
   tag:
     runs-on: ubuntu-18.04
