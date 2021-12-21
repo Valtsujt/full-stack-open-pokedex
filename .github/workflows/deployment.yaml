@@ -41,7 +41,7 @@ jobs:
           checkstring: "ok"
           rollbackonhealthcheckfailed: true
       - uses: 8398a7/action-slack@v3
-        if: always() && ${{ github.event_name == 'push' && !contains(join(toJson(github.event.commits.*.message), ', '), '#skip') }}
+        if: always() && ${{ github.event_name == 'push' && !contains(join(toJson(github.event.commits.*.message), ', '), '#skip') }} && '${{ job.status }}' === 'success'
         with:
           status: custom
           fields: repo,message,commit,author,action,eventName,ref,workflow,job,took,pullRequest # selectable (default: repo,message)
@@ -49,9 +49,16 @@ jobs:
             {
               attachments: [{
                 color: '${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning',
-                text: `${process.env.AS_WORKFLOW}\n${process.env.AS_JOB} (${process.env.AS_COMMIT}) of ${process.env.AS_REPO}@${process.env.AS_REF} by ${process.env.AS_AUTHOR} ${{ job.status }} in ${process.env.AS_TOOK}`,
+                text:  `a new version deployed to https://fullstack-deployment-test.herokuapp.com/ (${process.env.AS_COMMIT})  by ${process.env.AS_AUTHOR} Build took ${process.env.AS_TOOK}`,
               }]
             }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
+      - uses: 8398a7/action-slack@v3
+        if: always() && ${{ github.event_name == 'push' && !contains(join(toJson(github.event.commits.*.message), ', '), '#skip') }} '${{ job.status }}' !== 'success'
+        with:
+          status: ${{ job.status }}
+          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took,pullRequest # selectable (default: repo,message)
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
       
