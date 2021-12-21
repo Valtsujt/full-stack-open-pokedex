@@ -55,7 +55,7 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
       - uses: 8398a7/action-slack@v3
-        if: always() && ${{ github.event_name == 'push' && !contains(join(toJson(github.event.commits.*.message), ', '), '#skip') }} '${{ job.status }}' !== 'success'
+        if: always() && ${{ github.event_name == 'push' && !contains(join(toJson(github.event.commits.*.message), ', '), '#skip') }} &&'${{ job.status }}' !== 'success'
         with:
           status: ${{ job.status }}
           fields: repo,message,commit,author,action,eventName,ref,workflow,job,took,pullRequest # selectable (default: repo,message)
